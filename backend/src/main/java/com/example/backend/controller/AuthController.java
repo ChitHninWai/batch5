@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -19,17 +18,18 @@ import java.net.URI;
 public class AuthController {
     private final UserService userService;
     private final UserAuthProvider userAuthProvider;
+
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody SignupDto signUpDto){
-        UserDto userDto=userService.register(signUpDto);
-        return ResponseEntity.created(URI.create("/users/"+userDto.getId()))
+    public ResponseEntity<UserDto> register(@RequestBody SignupDto signupDto){
+        System.out.println("=============="+signupDto);
+        UserDto userDto = userService.register(signupDto);
+        return ResponseEntity.created(URI.create("/users/" + userDto.getId()))
                 .body(userDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto>
-        login(@RequestBody CredentialsDto credentialsDto){
-        UserDto user=userService.login(credentialsDto);
+    public ResponseEntity<UserDto> login (@RequestBody CredentialsDto credentialsDto) {
+        UserDto user =  userService.login(credentialsDto);
         user.setToken(userAuthProvider.createToken(user));
         return ResponseEntity.ok(user);
     }
